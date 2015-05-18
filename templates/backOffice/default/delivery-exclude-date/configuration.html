@@ -1,0 +1,267 @@
+{extends file="admin-layout.tpl"}
+
+{block name="no-return-functions"}
+    {$admin_current_location = 'modules'}
+{/block}
+
+{block name="page-title"}{intl l='Modules'}{/block}
+
+{block name="check-resource"}admin.module{/block}
+{block name="check-access"}view{/block}
+
+{block name="main-content"}
+    <div class="edit-module">
+        <div id="wrapper" class="container">
+            <ul class="breadcrumb">
+                <li><a href="{url path='/admin/home'}">{intl l="Home"}</a></li>
+                <li><a href="{url path='/admin/configuration'}">{intl l="Configuration"}</a></li>
+                <li>{intl l="Exclude delivery dates" d="deliveryexcludedate"}</li>
+            </ul>
+
+            {hook name="delivery-exclude-date.configuration-top"}
+
+            <div class="row" id="module-delivery-exclude-date">
+                <div class="col-md-12 general-block-decorator">
+                    <button class="btn btn-default pull-right js-popover"
+                            title="{intl l="Help !!!" d="deliveryexcludedate"}"
+                            data-placement="left"
+                            data-html="true"
+                            data-content="{intl l="To ask for help" d="deliveryexcludedate"}
+                    </br> <a target='_blank' href='https://github.com/thelia-modules/DeliveryExcludeDate/issues'>Github</a>
+                    , <a target='_blank' href='http://thelia.net/forum/'>Thelia forum</a>
+                    "
+                            >
+                        <span class="glyphicon glyphicon-info-sign"></span>
+                    </button>
+                    <div class="title title-without-tabs">
+                        {intl l="Excluded dates" d="deliveryexcludedate"}
+                    </div>
+                    <div class="form-container">
+                        <table class="table table-striped">
+                            <colgroup>
+                                <col />
+                                <col width="20%" />
+                                <col width="30%" />
+                                <col width="15%" />
+                                <col width="5%" />
+                                <col width="35%" />
+                            </colgroup>
+                            <thead>
+                            <tr>
+                                <th>
+                                    {intl l="ID"}
+                                </th>
+                                <th>
+                                    {intl l="Title"}
+                                </th>
+                                <th>
+                                    {intl l="Description"}
+                                </th>
+                                <th>
+                                    {intl l="Date"}
+                                </th>
+                                <th>
+                                    {intl l="Active"}
+                                </th>
+                                <th>
+                                    {intl l="Action" d="deliveryexcludedate"}
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {loop type="delivery_exclude_date" name="delivery_exclude_date"}
+                                <tr>
+                                    <td>
+                                        {$ID}
+                                    </td>
+                                    <td>
+                                        {$TITLE}
+                                    </td>
+                                    <td>
+                                        {$DESCRIPTION}
+                                    </td>
+                                    <td>
+                                        {format_date date=$DATE output="date"}
+                                    </td>
+                                    <td>
+                                        {if $ACTIVE}
+                                        <span class="label label-success">{intl l="Yes"}</span>
+                                        {else}
+                                        <span class="label label-warning">{intl l="No"}</span>
+                                        {/if}
+                                    </td>
+                                    <td>
+                                        {hook name="delivery-exclude-date.list-action" delivery_exclude_date_id=$ID}
+                                        <button class="btn btn-info btn-sm js-action-edit" data-action="{url path="/admin/module/DeliveryExcludeDate/$ID"}">
+                                            <span class="glyphicon glyphicon-cog"></span>
+                                            {intl l="Edit action" d="deliveryexcludedate"}
+                                        </button>
+                                        <button class="btn btn-danger btn-sm js-action-delete" data-action="{url path="/admin/module/DeliveryExcludeDate/$ID/_delete"}">
+                                            <span class="glyphicon glyphicon-trash"></span>
+                                            {intl l="Delete action" d="deliveryexcludedate"}
+                                        </button>
+                                    </td>
+                                </tr>
+                            {/loop}
+                            {elseloop rel="delivery_exclude_date"}
+                                <tr>
+                                    <td colspan="10">
+                                        <div class="alert alert-info">
+                                            {intl l="No date in database" d="deliveryexcludedate"}
+                                        </div>
+                                    </td>
+                                </tr>
+                            {/elseloop}
+                            </tbody>
+                            <tfoot>
+                            <tr>
+                                <td colspan="10" class="text-center">
+                                    <button type="button" class="btn btn-success js-action-create">
+                                        <span class="glyphicon glyphicon-plus"></span>
+                                        {intl l="Create action" d="deliveryexcludedate"}
+                                    </button>
+                                </td>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+
+                {include file="delivery-exclude-date/include/form-create.html"}
+                {include file="delivery-exclude-date/include/form-update.html"}
+
+                <!-- Modal -->
+                {form name="delivery_exclude_date.delete"}
+                    <form method="POST" class="js-form-delete" action="">
+                        {form_hidden_fields form=$form}
+
+                        {form_field form=$form field='success_url'}
+                            <input type="hidden" name="{$name}" value="{url path='/admin/module/DeliveryExcludeDate'}" />
+                        {/form_field}
+
+                        <div class="modal fade js-modal-delete {if $form_error}open{/if}" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-primary">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        <strong class="modal-title text-uppercase">{intl l="Delete exclud date" d="deliveryexcludedate"}</strong>
+                                    </div>
+                                    <div class="modal-body">
+                                        {if $form_error}
+                                            <div class="alert alert-danger">{$form_error_message}</div>
+                                        {/if}
+                                        {intl l="Are you sure you want to delete this date ?" d="deliveryexcludedate"}
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                            <span class="glyphicon glyphicon-remove"></span>
+                                            {intl l="Close action" d="deliveryexcludedate"}
+                                        </button>
+                                        <button type="submit" class="btn btn-danger">
+                                            <span class="glyphicon glyphicon-ok"></span>
+                                            {intl l="Delete action" d="deliveryexcludedate"}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                {/form}
+
+                <div class="col-md-12 general-block-decorator">
+                    <div class="title title-without-tabs">
+                        {intl l="Excluded days" d="deliveryexcludedate"}
+                    </div>
+                    <div class="form-container text-center">
+                        <form class="js-form-exclude-day">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">
+                                        {intl l="Monday" d="deliveryexcludedate"}
+                                    </th>
+                                    <th class="text-center">
+                                        {intl l="Tuesday" d="deliveryexcludedate"}
+                                    </th>
+                                    <th class="text-center">
+                                        {intl l="Wednesday" d="deliveryexcludedate"}
+                                    </th>
+                                    <th class="text-center">
+                                        {intl l="Thursday" d="deliveryexcludedate"}
+                                    </th>
+                                    <th class="text-center">
+                                        {intl l="Friday" d="deliveryexcludedate"}
+                                    </th>
+                                    <th class="text-center">
+                                        {intl l="Saturday" d="deliveryexcludedate"}
+                                    </th>
+                                    <th class="text-center">
+                                        {intl l="Sunday" d="deliveryexcludedate"}
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="make-switch switch-small day-switch" data-day="0" data-on="success" data-off="danger" data-on-label="<i class='glyphicon glyphicon-ok'></i>" data-off-label="<i class='glyphicon glyphicon-remove'></i>">
+                                            <input type="checkbox" value="1" {if {delivery_day_is_excluded day=0}}checked="checked"{/if}>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="make-switch switch-small day-switch" data-day="1" data-on="success" data-off="danger" data-on-label="<i class='glyphicon glyphicon-ok'></i>" data-off-label="<i class='glyphicon glyphicon-remove'></i>">
+                                            <input type="checkbox" value="1" {if {delivery_day_is_excluded day=1}}checked="checked"{/if}>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="make-switch switch-small day-switch" data-day="2" data-on="success" data-off="danger" data-on-label="<i class='glyphicon glyphicon-ok'></i>" data-off-label="<i class='glyphicon glyphicon-remove'></i>">
+                                            <input type="checkbox" value="1" {if {delivery_day_is_excluded day=2}}checked="checked"{/if}>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="make-switch switch-small day-switch" data-day="3" data-on="success" data-off="danger" data-on-label="<i class='glyphicon glyphicon-ok'></i>" data-off-label="<i class='glyphicon glyphicon-remove'></i>">
+                                            <input type="checkbox" value="1" {if {delivery_day_is_excluded day=3}}checked="checked"{/if}>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="make-switch switch-small day-switch" data-day="4" data-on="success" data-off="danger" data-on-label="<i class='glyphicon glyphicon-ok'></i>" data-off-label="<i class='glyphicon glyphicon-remove'></i>">
+                                            <input type="checkbox" value="1" {if {delivery_day_is_excluded day=4}}checked="checked"{/if}>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="make-switch switch-small day-switch" data-day="5" data-on="success" data-off="danger" data-on-label="<i class='glyphicon glyphicon-ok'></i>" data-off-label="<i class='glyphicon glyphicon-remove'></i>">
+                                            <input type="checkbox" value="1" {if {delivery_day_is_excluded day=5}}checked="checked"{/if}>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="make-switch switch-small day-switch" data-day="6" data-on="success" data-off="danger" data-on-label="<i class='glyphicon glyphicon-ok'></i>" data-off-label="<i class='glyphicon glyphicon-remove'></i>">
+                                            <input type="checkbox" value="1" {if {delivery_day_is_excluded day=6}}checked="checked"{/if}>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            {hook name="delivery-exclude-date.configuration-bottom"}
+
+            {hook name="module.configuration" location="module_configuration"  modulecode="DeliveryExcludeDate"}
+
+        </div>
+    </div>
+{/block}
+{block name="javascript-initialization"}
+    {javascripts file='assets/js/bootstrap-switch/bootstrap-switch.js'}
+        <script src="{$asset_url}"></script>
+    {/javascripts}
+
+    {include file="delivery-exclude-date/configuration-js.html"}
+{/block}
+
+{block name="javascript-last-call"}
+    {hook name="module.config-js" location="module-config-js" modulecode="DeliveryExcludeDate"}
+
+    {hook name="wysiwyg.js" location="wysiwyg-module-config-js" }
+{/block}

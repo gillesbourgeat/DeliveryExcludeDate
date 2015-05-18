@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<routes xmlns="http://symfony.com/schema/routing"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://symfony.com/schema/routing http://symfony.com/schema/routing/routing-1.0.xsd">
+
+    <route id="delivery_exclude_date_view_all" path="/admin/module/DeliveryExcludeDate" methods="GET">
+        <default key="_controller">DeliveryExcludeDate\Controller\DeliveryExcludeDateController::viewAllAction</default>
+    </route>
+
+    <route id="delivery_exclude_date_view" path="/admin/module/DeliveryExcludeDate/{id}" methods="GET">
+        <default key="_controller">DeliveryExcludeDate\Controller\DeliveryExcludeDateController::viewAction</default>
+        <requirement key="id">\d+</requirement>
+    </route>
+
+    <route id="delivery_exclude_date_create" path="/admin/module/DeliveryExcludeDate" methods="POST">
+        <default key="_controller">DeliveryExcludeDate\Controller\DeliveryExcludeDateController::createAction</default>
+    </route>
+
+    <route id="delivery_exclude_date_update" path="/admin/module/DeliveryExcludeDate/{id}" methods="POST">
+        <default key="_controller">DeliveryExcludeDate\Controller\DeliveryExcludeDateController::updateAction</default>
+        <requirement key="id">\d+</requirement>
+    </route>
+
+    <route id="delivery_exclude_date_delete" path="/admin/module/DeliveryExcludeDate/{id}/_delete" methods="POST">
+        <default key="_controller">DeliveryExcludeDate\Controller\DeliveryExcludeDateController::deleteAction</default>
+        <requirement key="id">\d+</requirement>
+    </route>
+
+    <route id="delivery_exclude_date_enable" path="/admin/module/DeliveryExcludeDate/{id}/_enable" methods="POST">
+        <default key="_controller">DeliveryExcludeDate\Controller\DeliveryExcludeDateController::enableAction</default>
+        <requirement key="id">\d+</requirement>
+    </route>
+
+    <route id="delivery_exclude_date_disable" path="/admin/module/DeliveryExcludeDate/{id}/_disable" methods="POST">
+        <default key="_controller">DeliveryExcludeDate\Controller\DeliveryExcludeDateController::disableAction</default>
+        <requirement key="id">\d+</requirement>
+    </route>
+
+    <route id="delivery_exclude_date_day_enable" path="/admin/module/DeliveryExcludeDate/day/{day}/_enable" methods="POST">
+        <default key="_controller">DeliveryExcludeDate\Controller\DeliveryExcludeDateDayController::enableAction</default>
+        <requirement key="day">[0-6]+</requirement>
+    </route>
+
+    <route id="delivery_exclude_date_day_disable" path="/admin/module/DeliveryExcludeDate/day/{day}/_disable" methods="POST">
+        <default key="_controller">DeliveryExcludeDate\Controller\DeliveryExcludeDateDayController::disableAction</default>
+        <requirement key="day">[0-6]</requirement>
+    </route>
+
+</routes>

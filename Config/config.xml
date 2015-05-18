@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<config xmlns="http://thelia.net/schema/dic/config"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://thelia.net/schema/dic/config http://thelia.net/schema/dic/config/thelia-1.0.xsd">
+
+    <loops>
+        <loop name="delivery_exclude_date" class="DeliveryExcludeDate\Loop\DeliveryExcludeDateLoop" />
+    </loops>
+
+    <forms>
+        <form name="delivery_exclude_date.enable" class="DeliveryExcludeDate\Form\DeliveryExcludeDateForm" />
+        <form name="delivery_exclude_date.disable" class="DeliveryExcludeDate\Form\DeliveryExcludeDateForm" />
+        <form name="delivery_exclude_date.delete" class="DeliveryExcludeDate\Form\DeliveryExcludeDateForm" />
+        <form name="delivery_exclude_date.create" class="DeliveryExcludeDate\Form\DeliveryExcludeDateCreateForm" />
+        <form name="delivery_exclude_date.update" class="DeliveryExcludeDate\Form\DeliveryExcludeDateUpdateForm" />
+    </forms>
+
+    <services>
+        <service id="delivery_exclude_date.action" class="DeliveryExcludeDate\Action\DeliveryExcludeDateAction" scope="request">
+            <tag name="kernel.event_subscriber"/>
+        </service>
+        <service id="delivery_exclude_date.smarty.plugin" class="DeliveryExcludeDate\Smarty\Plugins\DeliveryExcludeDatePlugin" scope="request">
+            <argument type="service" id="event_dispatcher" />
+            <tag name="thelia.parser.register_plugin"/>
+        </service>
+    </services>
+
+    <hooks>
+        <hook id="delivery_exclude_date.configuration" class="DeliveryExcludeDate\Hook\ConfigurationHook" scope="request">
+            <tag name="hook.event_listener" event="configuration.shipping-top" type="back" method="onConfigurationShippingTop"/>
+        </hook>
+    </hooks>
+
+</config>

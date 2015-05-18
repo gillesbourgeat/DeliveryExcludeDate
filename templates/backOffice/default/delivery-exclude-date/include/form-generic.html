@@ -1,0 +1,71 @@
+{$edit_language_id = {lang attr="id"}}
+
+<div class="modal-body">
+
+    {if $form_error && $form_error_message}
+        <div class="alert alert-danger">{$form_error_message}</div>
+    {/if}
+
+    {hook name="delivery-exclude-date.form-top" delivery_exclude_date_id=$delivery_exclude_date_id}
+
+    <div role="tabpanel">
+        <ul class="nav nav-tabs" role="tablist">
+            {loop type="lang" name="lang"}
+                <li role="presentation" {if $ID == $edit_language_id}class="active"{/if}>
+                    <a href="#attribute-type-{$LOCALE}" aria-controls="settings" role="tab" data-toggle="tab">
+                        <img src="{image file="assets/img/flags/$CODE.png"}" alt="{$TITLE}" />
+                    </a>
+                </li>
+            {/loop}
+        </ul>
+
+        <div class="tab-content">
+            <br/>
+            {loop type="lang" name="lang"}
+                <div role="tabpanel" class="tab-pane {if $ID == $edit_language_id}active{/if}" id="attribute-type-{$LOCALE}">
+                    {form_field form=$form field='title' value_key=$ID}
+                        <div class="form-group {if $error}has-error{/if}">
+                            <label for="{$prefix}{$ID}-{$label_attr.for}">({$TITLE}) {intl l="Title"}</label>
+                            <input id="{$prefix}{$ID}-{$label_attr.for}" type="text" class="form-control" name="{$name}" value="{$value}" maxlength="255" placeholder="{intl l="Enter title" d="deliveryexcludedate"}">
+                        </div>
+                    {/form_field}
+
+                    {form_field form=$form field='description' value_key=$ID}
+                        <div class="form-group {if $error}has-error{/if}">
+                            <label for="{$prefix}{$ID}-{$label_attr.for}">({$TITLE}) {intl l="Description"}</label>
+                            <textarea id="{$prefix}{$ID}-{$label_attr.for}" class="form-control" rows="3" name="{$name}">{$value}</textarea>
+                        </div>
+                    {/form_field}
+                </div>
+            {/loop}
+        </div>
+    </div>
+
+    <hr/>
+    <br/>
+
+    <div class="row">
+        <div class="col-md-6">
+            {form_field form=$form field='date'}
+                <div class="form-group {if $error}has-error{/if}">
+                    <label for="{$prefix}{$label_attr.for}">{$label}</label>
+                    <input type="date" id="{$prefix}{$label_attr.for}" class="form-control" name="{$name}" value="{$value}" placeholder="{intl l="yyyy-mm-dd" d="deliveryexcludedate"}" />
+                </div>
+            {/form_field}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            {form_field form=$form field='active'}
+                <div class="checkbox {if $error}has-error{/if}">
+                    <label>
+                        <input type="checkbox" id="{$prefix}{$label_attr.for}" name="{$name}" value="1" {if $value == 1}checked{/if}/> {$label}
+                    </label>
+                </div>
+            {/form_field}
+        </div>
+    </div>
+
+    {hook name="delivery-exclude-date.form-bottom" delivery_exclude_date_id=$delivery_exclude_date_id}
+
+</div>

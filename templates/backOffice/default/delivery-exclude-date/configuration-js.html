@@ -1,0 +1,123 @@
+<script type="text/javascript">
+    (function($, $module){
+
+        /*****************************************/
+        /************ Module global **************/
+        /*****************************************/
+
+        $module.find('.js-popover').popover();
+
+        function popoverHide() {
+            $module.find('.js-popover').popover('hide');
+        }
+
+        $module.on('submit', 'form', function(event){
+            $(this).find('button[type=submit]').html('<span class="glyphicon glyphicon-refresh"></span> {intl l="Please wait ..." d="deliveryexcludedate"}');
+            $module.find('button').attr('disabled', true);
+        });
+
+        $module.find('.modal.open').modal('show');
+
+        /*****************************************/
+        /****$$**** Exclude date create **********/
+        /*****************************************/
+
+        $module.on('click', '.js-action-create', function(event){
+            popoverHide();
+
+            $module.find('.js-modal-create').modal('show');
+        });
+
+        // tab
+        $module.on('click', '.js-form-create .nav-tabs a', function(){
+            $(this).parents('.nav-tabs').next('.tab-content')
+                    .find('.tab-pane').removeClass('active')
+                    .eq($(this).parent('li').index()).addClass('active');
+        });
+
+        /*****************************************/
+        /*********** Exclude date edit ***********/
+        /*****************************************/
+
+        $module.on('click', '.js-action-edit', function(event){
+            popoverHide();
+
+            $module.find('.js-form-edit').attr('action', $(this).data('action'));
+
+            $.ajax({
+                url: $(this).data('action'),
+                type: 'GET',
+                dataType: 'html',
+                success: function(html){
+                    $module.find('.js-form-edit').html($(html).html());
+                    $module.find('.js-modal-edit').modal('show');
+                },
+                error: function(error){
+                    alert(error);
+                }
+            });
+        });
+
+        // tab
+        $module.on('click', '.js-form-edit .nav-tabs a', function(){
+            $(this).parents('.nav-tabs').next('.tab-content')
+                    .find('.tab-pane').removeClass('active')
+                    .eq($(this).parent('li').index()).addClass('active');
+        });
+
+        /*****************************************/
+        /********* Exclude date delete ***********/
+        /*****************************************/
+
+        $module.on('click', '.js-action-delete', function(event){
+            popoverHide();
+
+            $module.find('.js-modal-delete').modal('show');
+            $module.find('.js-form-delete').attr('action', $(this).data('action'));
+        });
+
+        /*****************************************/
+        /************ Exclude day ****************/
+        /*****************************************/
+
+        var route = "{url path="/admin/module/DeliveryExcludeDate/day/[day]/[action]"}";
+        var btnClose = '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
+
+        $module.on("switch-change", '.day-switch', function(e, data){
+
+            var checkbox = $(this);
+
+            // day in url
+            var url = route.replace("[day]", checkbox.data('day'));
+
+            // action in url
+            url = url.replace("[action]", (data.value) ? '_enable' : '_disable');
+
+            $module.find(".js-form-exclude-day").prepend('<div role="alert" class="alert alert-warning">{intl l="Please wait ..." d="deliveryexcludedate"}</div>')
+
+            var $alert = $module.find(".js-form-exclude-day .alert:first");
+
+            $.ajax({
+                url: url,
+                method: 'POST',
+                success: function(data){
+                    $alert
+                        .html(btnClose + "{intl l="Modification successfully" d="deliveryexcludedate"}")
+                        .removeClass("alert-warning")
+                        .addClass('alert-success');
+                },
+                error: function(error){
+                    $alert
+                        .html(btnClose + "{intl l="An error occurred" d="deliveryexcludedate"}")
+                        .removeClass("alert-warning")
+                        .addClass('alert-danger');
+
+                    checkbox.bootstrapSwitch('toggleState', true);
+                }
+            });
+        });
+
+    }(jQuery, jQuery("#module-delivery-exclude-date")));
+</script>
+
+{hook name="delivery-exclude-date.configuration-js"}
